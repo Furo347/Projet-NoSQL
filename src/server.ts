@@ -2,21 +2,26 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import {readFile} from 'fs/promises';
 import api from "./api/hello";
+import { serve } from "@hono/node-server";
 
-let html = await readFile("index.html", "utf8")
+const isProd = process.env["NODE_ENV"] === "production"
 
-html = html.replace("<head>", `
-<head>
-<script type="module">
-import RefreshRuntime from "/@react-refresh"
-RefreshRuntime.injectIntoGlobalHook(window)
-window.$RefreshReg$ = () => {}
-window.$RefreshSig$ = () => (type) => type
-window.__vite_plugin_react_preamble_installed__ = true
-</script>
+let html = await readFile(isProd ? "build/index.html" : "index.html", "utf8")
 
-<script type="module" src="/@vite/client"></script>
-`)
+if (!isProd) {
+  html = html.replace("<head>", `
+  <head>
+  <script type="module">
+  import RefreshRuntime from "/@react-refresh"
+  RefreshRuntime.injectIntoGlobalHook(window)
+  window.$RefreshReg$ = () => {}
+  window.$RefreshSig$ = () => (type) => type
+  window.__vite_plugin_react_preamble_installed__ = true
+  </script>
+  
+  <script type="module" src="/@vite/client"></script>
+  `)
+}
 
 const app = new Hono()
 
@@ -26,9 +31,14 @@ app.use('*', async (ctx, next) => {
   await next();
 })
 
-app.use("/assets/*", serveStatic({root: './'}))
+app.use("/assets/*", serveStatic({root: isProd ? 'build/' : './'}))
 
 app.get('/*', (ctx) => ctx.html(html))
 
+if (isProd) {
+  serve({...app, port: 8080}, (info) => {
+    console.info(`Server running at http://localhost:${info.port}`)
+  })
+}
 
 export default app
