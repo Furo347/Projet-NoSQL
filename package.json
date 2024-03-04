@@ -12,8 +12,10 @@
   "dependencies": {
     "@hono/node-server": "^1.8.2",
     "hono": "^4.0.9",
+    "mongoose": "^8.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "redis": "^4.6.13"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.8.2",
