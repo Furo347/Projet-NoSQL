@@ -15,7 +15,8 @@
     "hono": "^4.0.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tsup": "^8.0.2"
+    "tsup": "^8.0.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.8.2",
