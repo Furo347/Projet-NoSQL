@@ -13,10 +13,3 @@ connectToRedis();
 export async function setResponseInRedis(value: boolean) {
     await client.set('response', value ? 'true' : 'false'); // Corrected interpolation syntax
 }
-
-export enum Themes {
-    Vetement = 'clothing',
-    Metier = 'job',
-    Animal = 'species',
-    Nourriture = 'food'
-}
