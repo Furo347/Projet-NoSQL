@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rm -rf dist && rm -rf build && tsc && tsup --no-splitting --format=esm --target=esnext --clean src/server.ts src/api/**/*.ts && vite build",
+    "build": "rm -rf dist && rm -rf build && tsc && tsup && vite build",
     "serve": "node dist/server.js",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -14,9 +14,11 @@
     "@hono/node-server": "^1.8.2",
     "hono": "^4.0.9",
     "mongoose": "^8.2.0",
+    "redis": "^4.6.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "redis": "^4.6.13"
+    "tsup": "^8.0.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@hono/vite-dev-server": "^0.8.2",
