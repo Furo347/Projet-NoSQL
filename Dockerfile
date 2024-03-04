@@ -21,4 +21,4 @@ COPY --from=build /build ./build
 COPY --from=build /package.json .
 COPY --from=dependencies /node_modules ./node_modules
 
-CMD sleep 1h
+CMD npm run serve
