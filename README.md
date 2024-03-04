@@ -1,2 +1,2 @@
 # Projet-NoSQL
-Membres: Florentin PORTETS, Martin JUILLARD-FONTANILLE Martin, Lora SEGUIN, Eliot GUILAL
+Membres: PORTETS Florentin, JUILLARD-FONTANILLE Martin, SEGUIN Lora, GUILAL Eliot
