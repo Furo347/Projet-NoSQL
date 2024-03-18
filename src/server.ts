@@ -3,8 +3,9 @@ import { Hono } from "hono";
 import {readFile} from 'fs/promises';
 import api from "./api";
 import { serve } from "@hono/node-server";
+import './env'
 
-const isProd = process.env["NODE_ENV"] === "production"
+const isProd = process.env.NODE_ENV === "production"
 
 let html = await readFile(isProd ? "build/index.html" : "index.html", "utf8")
 

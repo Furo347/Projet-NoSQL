@@ -17,7 +17,7 @@ async function getTheme(word: string) {
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': import.meta.env.VITE_RAPIDAPI_KEY,
+            'X-RapidAPI-Key': import.meta.env.CLIENT_RAPIDAPI_KEY,
             'X-RapidAPI-Host': 'twinword-word-graph-dictionary.p.rapidapi.com'
         }
     };

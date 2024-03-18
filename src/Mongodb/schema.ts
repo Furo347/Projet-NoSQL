@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
 // Define the MongoDB URI
-const MONGODB_URI = 'mongodb://localhost:27017';
+const MONGODB_URI = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`;
 
 // Define the schema
 interface ScoreBoard extends Document {

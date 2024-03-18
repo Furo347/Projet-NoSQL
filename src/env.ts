@@ -2,10 +2,14 @@ import { z } from "zod";
 
 const envSchema = z.object({
   NODE_ENV: z.string().default('development'),
-  VITE_RAPIDAPI_KEY: z.string()
+  RAPIDAPI_KEY: z.string(),
+  MONGO_HOST: z.string(),
+  MONGO_PORT: z.string(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.string(),
 })
 
-envSchema.parse(import.meta.env)
+envSchema.parse(process.env)
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace

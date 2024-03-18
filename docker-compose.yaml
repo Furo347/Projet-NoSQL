@@ -15,8 +15,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
+      - MONGO_HOST=mongo
+      - REDIS_HOST=redis
     depends_on:
       - mongo
       - redis
