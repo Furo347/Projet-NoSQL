@@ -3,10 +3,10 @@ import {zValidator} from "@hono/zod-validator";
 import {z} from "zod";
 import {setResponseInRedis} from "../Redis/clientManager.ts";
 import points from "./points.ts";
-import word from "./word.ts";
+import checkWords from "./checkWords.ts";
 
 const api = new Hono()
-    
+
 const routes = api
     .post('/response', zValidator('json', z.object({
         response: z.boolean()
@@ -16,7 +16,7 @@ const routes = api
         return ctx.json(result);
     })
     .route('/', points)
-    .route('/', word)
+    .route('/', checkWords)
 
 export type APIType = typeof routes;
 export default api;
