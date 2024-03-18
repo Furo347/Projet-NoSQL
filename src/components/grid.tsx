@@ -3,7 +3,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
-import { Themes, checkWord, getTheme, randomLetter } from '../api/checkWords';
+import { Themes, checkWord, randomLetter } from '../api/checkWords';
 import TextField from '@mui/material/TextField';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,10 +57,13 @@ export default function BacGrid() {
     setRowData(newData);
   };
 
-  const handleValidateLine = () => {
+  const handleValidateLine = async () => {
     // Récupère les données de la ligne actuelle
     const currentLineData = rowData[rowData.length - 1];
     console.log("Données de la ligne actuelle :", currentLineData);
+    console.log(checkWord("Crocodile", Themes.Animal))
+    const isValid = await checkWord(currentLineData[0], Themes.Vetement); // Par exemple, en supposant que le thème est Animal
+    console.log("Validation de la ligne :", isValid);
   };
 
   return (

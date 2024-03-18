@@ -1,5 +1,5 @@
 export enum Themes {
-    Vetement = 'clothing',
+    Vetement = 'clothes',
     Metier = 'job',
     Animal = 'species',
     Nourriture = 'food'
@@ -51,8 +51,10 @@ export async function checkWord(word: string, desiredTheme: Themes) {
     let check = false;
     if (word[0] === CURRENT_LETTER) {
         const theme = await getTheme(word) as Array<string>;
-        check = theme.includes(desiredTheme);
+        if (Array.isArray(theme))
+        {
+            check = theme.includes(desiredTheme);
+        }
     }
-    console.log(check)
     return check
 }

@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import BacGrid from './compoments/grid'; 
-import PlayerNameDialog from './compoments/identification';
+import BacGrid from './components/grid'; 
+import PlayerNameDialog from './components/identification';
 
 function AppRouter() {
   return (

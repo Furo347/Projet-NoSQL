@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import PlayerNameDialog from './compoments/identification';
+import PlayerNameDialog from './components/identification';
 import './App.css';
-import BacGrid from './compoments/grid';
+import BacGrid from './components/grid';
 
 function App() {
   return (
