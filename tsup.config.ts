@@ -2,10 +2,8 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
   entry: [
-    "src/server.ts",
-    "src/api/**/*.ts"
+    "src/server.ts"
   ],
-  splitting: false,
   sourcemap: true,
   clean: true,
   format: "esm",
