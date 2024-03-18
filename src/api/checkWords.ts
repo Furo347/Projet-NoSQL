@@ -4,16 +4,15 @@ export enum Themes {
     Animal = 'species',
     Nourriture = 'food'
 }
-// function getRandomInt(max: number) {
-//     return Math.floor(Math.random() * max);
-// }
+function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+}
 
-// const ranNumber = getRandomInt(25);
-// const letter = [
-//     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-//     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-// const CURRENT_LETTER = letter[ranNumber];
-const CURRENT_LETTER = 'c';
+const ranNumber = getRandomInt(25);
+const letter = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+export const CURRENT_LETTER = letter[ranNumber];
 async function getTheme(word: string) {
     const url = `https://twinword-twinword-bundle-v1.p.rapidapi.com/theme/?entry=${word}`;
     const options = {
@@ -40,7 +39,6 @@ export async function checkWord(word: string, desiredTheme: Themes) {
     let check = false;
     if (word[0] === CURRENT_LETTER) {
         const theme = await getTheme(word) as Array<string>;
-        console.log(theme);
         if (Array.isArray(theme))
         {
             check = theme.includes(desiredTheme);

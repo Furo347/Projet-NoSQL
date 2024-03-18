@@ -15,10 +15,10 @@ const schema: Schema<ScoreBoard> = new Schema({
 });
 
 // Define the model
-const ScoreBoard: Model<ScoreBoard> = mongoose.model<ScoreBoard>('ScoreBoard', schema);
+const ScoreBoardModel: Model<ScoreBoard> = mongoose.model<ScoreBoard>('ScoreBoard', schema);
 
 // Connect to MongoDB
-async function main() {
+async function connectToMongo() {
     try {
         await mongoose.connect(MONGODB_URI);
         console.log('Connected to MongoDB');
@@ -27,13 +27,26 @@ async function main() {
     }
 }
 
-main();
+connectToMongo();
 
-export async function insertInMongo(name: string, score: number): Promise<void> {
+// Insert function
+export async function insertInMongo(name: string, score: number) {
     try {
-        await ScoreBoard.create({ name, score });
         console.log('Data inserted successfully');
+        return await ScoreBoardModel.create({ name, score });
     } catch (error) {
         console.error('Error inserting data:', error);
+        throw error;
+    }
+}
+
+// Retrieve function
+export async function getScoreBoard(): Promise<{ name: string, score: number }[]> {
+    try {
+        const scores = await ScoreBoardModel.find({}, { _id: 0, __v: 0 }); // Exclude _id and __v fields
+        return scores.map(score => ({ name: score.name, score: score.score }));
+    } catch (error) {
+        console.error('Error retrieving scores:', error);
+        throw error;
     }
 }

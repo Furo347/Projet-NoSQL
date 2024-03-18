@@ -11,5 +11,11 @@ async function connectToRedis() {
 connectToRedis();
 
 export async function setResponseInRedis(value: boolean) {
-    await client.set('response', value ? 'true' : 'false'); // Corrected interpolation syntax
+    return await client.append('response', value ? 'true' : 'false');
+}
+
+export async function getResponseFromRedis(){
+    const r = await  client.get('response');
+    await client.del('response');
+    return r;
 }
