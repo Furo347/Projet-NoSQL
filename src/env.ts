@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-const envSchema = z.object({
+const clientEnvSchema = z.object({})
+
+const envSchema = clientEnvSchema.extend({
   NODE_ENV: z.string().default('development'),
   RAPIDAPI_KEY: z.string(),
   MONGO_HOST: z.string(),
@@ -16,4 +18,6 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv extends z.infer<typeof envSchema> {}
   }
+
+  interface ImportMetaEnv extends z.infer<typeof clientEnvSchema> {}
 }
