@@ -1,5 +1,5 @@
 export enum Themes {
-  Vetement = 'clothing',
+  Vetement = 'clothes',
   Metier = 'job',
   Animal = 'species',
   Nourriture = 'food'

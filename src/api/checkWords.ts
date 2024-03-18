@@ -1,8 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
-import { z } from "zod";;
+import { z } from "zod";
 export enum Themes {
-    Vetement = 'clothing',
+    Vetement = 'clothes',
     Metier = 'job',
     Animal = 'species',
     Nourriture = 'food'
@@ -11,12 +11,15 @@ function getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
 }
 
-const ranNumber = getRandomInt(25);
-const letter = [
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-const CURRENT_LETTER = letter[ranNumber];
-
+export function randomLetter() {
+    const ranNumber = getRandomInt(25);
+    const letter = [
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    const randomLowerCaseLetter = letter[ranNumber];
+    console.log(randomLowerCaseLetter);
+    return randomLowerCaseLetter.toUpperCase();
+}
 async function getTheme(word: string) {
     const url = `https://twinword-twinword-bundle-v1.p.rapidapi.com/theme/?entry=${word}`;
     const options = {
@@ -39,7 +42,7 @@ async function getTheme(word: string) {
     }
 }
 
-async function checkWord(word: string, desiredTheme: Themes) {
+export async function checkWord(word: string, desiredTheme: Themes) {
     let check = false;
     if (word[0] === CURRENT_LETTER) {
         const theme = await getTheme(word) as Array<string>;
