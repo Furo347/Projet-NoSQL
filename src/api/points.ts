@@ -28,7 +28,7 @@ const points = new Hono()
         return ctx.json(scoreBoard);
     }).post('/points', zValidator('json', z.object({
         name: z.string(),
-        points: z.number().positive()
+        points: z.number()
     })), async (ctx) => {
         const { name, points } = ctx.req.valid('json');
         const result = await insertInMongo(name, points);

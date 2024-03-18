@@ -6,12 +6,12 @@ const MONGODB_URI = 'mongodb://localhost:27017';
 // Define the schema
 interface ScoreBoard extends Document {
     name: string;
-    score: number;
+    points: number;
 }
 
 const schema: Schema<ScoreBoard> = new Schema({
     name: String,
-    score: Number,
+    points: Number,
 });
 
 // Define the model
@@ -21,6 +21,8 @@ const ScoreBoardModel: Model<ScoreBoard> = mongoose.model<ScoreBoard>('ScoreBoar
 async function connectToMongo() {
     try {
         await mongoose.connect(MONGODB_URI);
+        
+
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
@@ -30,10 +32,10 @@ async function connectToMongo() {
 connectToMongo();
 
 // Insert function
-export async function insertInMongo(name: string, score: number) {
+export async function insertInMongo(name: string, points: number) {
     try {
         console.log('Data inserted successfully');
-        return await ScoreBoardModel.create({ name, score });
+        return await ScoreBoardModel.create({ name, points });
     } catch (error) {
         console.error('Error inserting data:', error);
         throw error;
@@ -41,12 +43,23 @@ export async function insertInMongo(name: string, score: number) {
 }
 
 // Retrieve function
-export async function getScoreBoard(): Promise<{ name: string, score: number }[]> {
+export async function getScoreBoard(): Promise<{ name: string, points: number }[]> {
     try {
         const scores = await ScoreBoardModel.find({}, { _id: 0, __v: 0 }); // Exclude _id and __v fields
-        return scores.map(score => ({ name: score.name, score: score.score }));
+        return scores.map(score => ({ name: score.name, points: score.points }));
     } catch (error) {
         console.error('Error retrieving scores:', error);
+        throw error;
+    }
+}
+
+// Function to delete all data from the ScoreBoard collection
+export async function deleteAllData() {
+    try {
+        const result = await ScoreBoardModel.deleteMany({});
+        console.log(`${result.deletedCount} documents deleted from the ScoreBoard collection.`);
+    } catch (error) {
+        console.error('Error deleting data:', error);
         throw error;
     }
 }

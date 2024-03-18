@@ -1,17 +1,13 @@
 import { Box } from '@material-ui/core';
 import {styles} from './Score.style';
 import Button from '@mui/material/Button';
+import { fetchScoreboardData } from './getScoreBoard';
+import { scoreboardData } from './getScoreBoard';
 
-const {container, title} = styles;
+const { title } = styles;
+const scores = await fetchScoreboardData();
 
 function ScoreboardPage() {
-    const scores = [
-        { name: 'Joueur 1', score: 100 },
-        { name: 'Joueur 2', score: 90 },
-        { name: 'Joueur 3', score: 80 },
-        { name: 'Joueur 4', score: 70 },
-        { name: 'Joueur 5', score: 60 }
-    ];
 
     const handleButtonClick = () => {
         window.location.href = '/game';
@@ -29,10 +25,10 @@ function ScoreboardPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {scores.map((score, index) => (
+                    {scores.map((score: scoreboardData, index: number) => (
                         <tr key={index}>
                             <td>{score.name}</td>
-                            <td>{score.score}</td>
+                            <td>{score.points}</td>
                         </tr>
                     ))}
                 </tbody>
