@@ -1,6 +1,7 @@
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -22,7 +23,12 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function BacGrid() {
     const classes = useStyles();
 
+    const handleButtonClick = () => {
+        window.location.href = '/scores';
+    }
+
     return (
+    <>
         <div>
             <Grid container>
                 <Grid item xs={12}>
@@ -53,5 +59,7 @@ export default function BacGrid() {
                 </Grid>
             </Grid>
         </div>
+        <Button variant="contained" onClick={handleButtonClick}>Voir scores</Button>
+    </>
     );
 }
