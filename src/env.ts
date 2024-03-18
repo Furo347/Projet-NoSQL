@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-const clientEnvSchema = z.object({})
+const clientEnvSchema = z.object({
+  NODE_ENV: z.string().default('development')
+})
 
 const envSchema = clientEnvSchema.extend({
-  NODE_ENV: z.string().default('development'),
   RAPIDAPI_KEY: z.string(),
   MONGO_HOST: z.string(),
   MONGO_PORT: z.string(),
