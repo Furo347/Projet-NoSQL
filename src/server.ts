@@ -1,7 +1,7 @@
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono } from "hono";
 import {readFile} from 'fs/promises';
-import api from "./api/hello";
+import api from "./api";
 import { serve } from "@hono/node-server";
 
 const isProd = process.env["NODE_ENV"] === "production"
