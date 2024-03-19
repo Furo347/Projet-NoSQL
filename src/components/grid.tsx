@@ -2,9 +2,9 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
-import { Themes, randomLetter } from '../util/rapidapi.ts';
+import { ThemeList, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -40,50 +40,48 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }),
 );
-function getThemeByIndex(index: number): Themes | undefined {
-  const themeKeys = Object.keys(Themes).filter(key => isNaN(Number(key)));
-  const themeValues = themeKeys.map(key => Themes[key as keyof typeof Themes]);
-  return themeValues[index];
-}
 
 export default function BacGrid() {
   const classes = useStyles();
-  const [letters, setLetters] = useState<string[]>([]);
-  const [rowData, setRowData] = useState<string[][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
+  const [rowData, setRowData] = useState<[string, string[]][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
   const [searchParams] = useSearchParams();
   const playerName = searchParams.get('playerName')
   const nav = useNavigate()
 
+  const handleButtonClick = useCallback(() => {
+    nav(`/scores?playerName=${playerName}`)
+  }, [playerName, nav])
+
+  const handleRandomLetter = useCallback(() => {
+    const newLetter = randomLetter();
+    setRowData(prev => [...prev, [newLetter, ThemeList.map(() => '')]]);
+  }, []);
+
+  const handleTextFieldChange = useCallback((rowIndex: number, themeIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newData = [...rowData];
+    newData[rowIndex][1][themeIndex] = event.target.value;
+    setRowData(newData);
+  }, [rowData]);
+
+  const handleValidateLine = useCallback(async () => {
+    const currentLineData = rowData[rowData.length - 1];
+
+    for (let i = 0; i < currentLineData[1].length; i++ ) {
+      const data = currentLineData[1][i]
+      if (!data) {
+        return
+      }
+
+      const theme = ThemeList[i]
+      await verifyWord(data, theme, currentLineData[0]);
+    }
+  }, [rowData]);
+
+  console.log(rowData)
+
   if (!playerName) {
     return <Navigate to='/' />
   }
-  const handleButtonClick = () => {
-    nav(`/scores?playerName=${playerName}`)
-  }
-  const handleRandomLetter = () => {
-    const newLetter = randomLetter();
-    setLetters(prevLetters => [...prevLetters, newLetter]);
-    // Ajoute un nouvel élément vide à rowData pour la nouvelle ligne
-    setRowData(prevRowData => [...prevRowData, Array.from({ length: 4 }, () => "")]);
-  };
-
-  const handleTextFieldChange = (rowIndex: number, colIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newData = [...rowData];
-    newData[rowIndex][colIndex] = event.target.value;
-    setRowData(newData);
-  };
-
-  const handleValidateLine = async () => {
-    // Récupère les données de la ligne actuelle
-    const currentLineData = rowData[rowData.length - 1];
-    for (let i = 0; i < currentLineData.length; i++ ) {
-      if (getThemeByIndex(i) && currentLineData[i]) {
-        const themeByIndex = getThemeByIndex(i) as Themes;
-        const isValid = await verifyWord(currentLineData[i], themeByIndex, letters[letters.length - 1]);
-        console.log(isValid.data);
-      }
-    }
-  };
 
   return (
     <>
@@ -101,32 +99,23 @@ export default function BacGrid() {
             <Paper className={classes.title}>Jeu du baccalauréat</Paper>
           </Grid>
           <Grid container>
-            <Grid item style={{ flexBasis: '12%' }}>
-              <Paper className={classes.paper}>Lettre</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Vetement</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Metier</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Animal</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Nourriture</Paper>
-            </Grid>
+              <Grid item style={{ flexBasis: '12%' }}>
+                <Paper className={classes.paper}>Lettre</Paper>
+              </Grid>
+            {ThemeList.map((theme) => 
+              <Grid item style={{ flexBasis: '22%' }}>
+                <Paper className={classes.paper}>{theme}</Paper>
+              </Grid>)}
           </Grid>
-          {letters.map((letter, index) => (
+          {rowData.map((data, index) => (
             <Grid container key={index}>
               <Grid item style={{ flexBasis: '12%' }}>
-                <Paper className={classes.paper}>{letter}</Paper>
+                <Paper className={classes.paper}>{data[0]}</Paper>
               </Grid>
-              {Array(4).map((_, i) => (
+              {ThemeList.map((_, i) => (
                 <Grid item key={i} className={classes.column} style={{ flexBasis: '22%' }}>
                 <TextField
                   className={`${classes.paper} ${classes.customTextField}`}
-                  value={rowData[index] ? rowData[index][i] : ""}
                   onChange={handleTextFieldChange(index, i)}
                 />
               </Grid>
