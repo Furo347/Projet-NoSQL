@@ -51,7 +51,7 @@ export default function BacGrid() {
   const [letters, setLetters] = useState<string[]>([]);
   const [rowData, setRowData] = useState<string[][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
   const [searchParams] = useSearchParams();
-  const playerName = searchParams.get('PlayerName')
+  const playerName = searchParams.get('playerName')
 
   if (!playerName) {
     window.location.href = '/'

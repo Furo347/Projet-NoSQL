@@ -7,12 +7,11 @@ import {useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 
 const { title } = styles;
-//const scores = await fetchScoreboardData(NAME);
 
 function ScoreboardPage() {
     const [scores, setScores] = useState([])
     const [searchParams] = useSearchParams();
-    const playerName = searchParams.get('PlayerName')
+    const playerName = searchParams.get('playerName')
 
     if (!playerName) {
         window.location.href = '/'
