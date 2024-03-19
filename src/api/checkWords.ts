@@ -20,28 +20,30 @@ export function randomLetter() {
     return randomLowerCaseLetter.toUpperCase();
 }
 async function getTheme(word: string) {
-    const verifiedWord = word.toLowerCase();
-    const url = `https://twinword-twinword-bundle-v1.p.rapidapi.com/theme/?entry=${verifiedWord}`;
+    const verifiedWord = encodeURIComponent(word.toLowerCase());
+    const url = `https://twinword-word-graph-dictionary.p.rapidapi.com/theme/?entry=${verifiedWord}`;
     const options = {
         method: 'GET',
         headers: {
-            'X-RapidAPI-Key': import.meta.env.RAPIDAPI_KEY,
-            'X-RapidAPI-Host': 'twinword-checkWords-graph-dictionary.p.rapidapi.com'
+            'X-RapidAPI-Key': import.meta.env.VITE_RAPIDAPI_KEY,
+            'X-RapidAPI-Host': 'twinword-word-graph-dictionary.p.rapidapi.com'
         }
     };
 
     try {
         const response = await fetch(url, options);
         if (!response.ok) {
-            console.log(response);
-            return Error('Failed to fetch data from Twinword API');
+            console.error(`Failed to fetch data from Twinword API. Status: ${response.status}`);
+            throw new Error('Failed to fetch data from Twinword API');
         }
         const result = await response.json();
         return result.theme as Array<string>;
     } catch (error) {
-        return error;
+        console.error('Error fetching data from Twinword API:', error);
+        throw error;
     }
 }
+
 
 export async function checkWord(word: string, desiredTheme: Themes, currentLetter: string) {
     let check = false;
