@@ -1,30 +1,20 @@
 import { Box } from '@material-ui/core';
 import {styles} from './Score.style';
 import Button from '@mui/material/Button';
-import { fetchScoreboardData } from './getScoreBoard';
-import { scoreboardData } from './getScoreBoard';
 import {Navigate, useNavigate, useSearchParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { scoreboardData, useScoreboardData } from '../../hooks/useScoreboardData';
 
 const { title } = styles;
 
 function ScoreboardPage() {
-    const [scores, setScores] = useState([])
     const [searchParams] = useSearchParams();
     const playerName = searchParams.get('playerName')
     const nav = useNavigate()
+    const scores = useScoreboardData(playerName);
 
     if (!playerName) {
         return <Navigate to="/" />
     }
-
-    useEffect(() => {
-        fetchScoreboardData(playerName).then((data) => {
-            if (data){
-                setScores(data)
-            }
-        })
-    }, [])
 
     const handleButtonClick = () => {
         nav(`/game?playerName=${playerName}`)
