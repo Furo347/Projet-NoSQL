@@ -1,9 +1,14 @@
-export enum Themes {
-  Vetement = 'clothes clothing',
-  Metier = 'job',
-  Animal = 'species animal',
-  Nourriture = 'food',
-}
+export const Themes = {
+  Vetement: 'clothes clothing',
+  Metier: 'job',
+  Animal: 'species animal',
+  Nourriture: 'food',
+} as const
+
+export const ThemeList = Object.keys(Themes) as Array<keyof typeof Themes>;
+
+export type ThemesKey = keyof typeof Themes;
+
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);
 }

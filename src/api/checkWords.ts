@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 import {setResponseInRedis} from "../Redis/clientManager.ts";
-import {Themes} from "../util/rapidapi.ts";
+import {Themes, ThemesKey} from "../util/rapidapi.ts";
 
 async function getTheme(word: string) {
     const verifiedWord = encodeURIComponent(word.toLowerCase());
@@ -30,7 +30,7 @@ async function getTheme(word: string) {
 }
 
 
-export async function checkWord(word: string, desiredTheme: Themes, currentLetter: string) {
+export async function checkWord(word: string, desiredTheme: ThemesKey, currentLetter: string) {
     let check = false;
     if (word[0].toUpperCase() === currentLetter) {
         const theme = await getTheme(word) as Array<string>;
@@ -55,7 +55,7 @@ const checkWords = new Hono()
         currentLetter: z.string()
     })), async (ctx) => {
         const { word, desiredTheme, currentLetter } = ctx.req.valid('json');
-        const result = await checkWord(word, desiredTheme as Themes, currentLetter);
+        const result = await checkWord(word, desiredTheme as ThemesKey, currentLetter);
         console.log(result);
         setResponseInRedis(result);
         return ctx.json(result);
