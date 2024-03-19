@@ -38,12 +38,9 @@ export async function checkWord(word: string, desiredTheme: Themes, currentLette
         if (Array.isArray(theme))
         {
             const desiredWords = desiredTheme.split(' ');
-            for (const theme of Object.values(Themes)) {
-                const themeWords = theme.split(' ');
-                for (const desiredWord of desiredWords) {
-                    if (themeWords.includes(desiredWord)) {
-                        check=true;
-                    }
+            for (const desiredWord of desiredWords) {
+                if (theme.includes(desiredWord)) {
+                    check=true;
                 }
             }
         }
@@ -64,4 +61,4 @@ const checkWords = new Hono()
         return ctx.json(result);
     });
 
-export default checkWords
+export default checkWords;
