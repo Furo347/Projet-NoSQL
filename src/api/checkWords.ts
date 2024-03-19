@@ -1,24 +1,9 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
-export enum Themes {
-    Vetement = 'clothes clothing',
-    Metier = 'job',
-    Animal = 'species animal',
-    Nourriture = 'food',
-}
-function getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-}
+import {setResponseInRedis} from "../Redis/clientManager.ts";
+import {Themes} from "../util/rapidapi.ts";
 
-export function randomLetter() {
-    const ranNumber = getRandomInt(25);
-    const letter = [
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    const randomLowerCaseLetter = letter[ranNumber];
-    return randomLowerCaseLetter.toUpperCase();
-}
 async function getTheme(word: string) {
     const verifiedWord = encodeURIComponent(word.toLowerCase());
     const url = `https://twinword-word-graph-dictionary.p.rapidapi.com/theme/?entry=${verifiedWord}`;
@@ -74,6 +59,9 @@ const checkWords = new Hono()
     })), async (ctx) => {
         const { word, desiredTheme, currentLetter } = ctx.req.valid('json');
         const result = await checkWord(word, desiredTheme as Themes, currentLetter);
+        console.log(result);
+
+        setResponseInRedis(result);
         return ctx.json(result);
     });
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import {Themes} from "../api/checkWords.ts";
+import {Themes} from "../util/rapidapi.ts";
+
 export type checkWordData = {word: string, desiredTheme: Themes, currentLetter: string; };
 export async function verifyWord(word: string, desiredTheme: Themes, currentLetter: string) {
     try {

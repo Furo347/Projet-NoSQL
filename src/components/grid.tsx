@@ -2,7 +2,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
-import { Themes, randomLetter } from '../api/checkWords';
+import { Themes, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
@@ -39,6 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }),
 );
+function getThemeByIndex(index: number): Themes | undefined {
+  const themeKeys = Object.keys(Themes).filter(key => isNaN(Number(key)));
+  const themeValues = themeKeys.map(key => Themes[key as keyof typeof Themes]);
+  return themeValues[index];
+}
 
 export default function BacGrid() {
   const classes = useStyles();
@@ -61,8 +66,13 @@ export default function BacGrid() {
   const handleValidateLine = async () => {
     // Récupère les données de la ligne actuelle
     const currentLineData = rowData[rowData.length - 1];
-    const isValid = await verifyWord(currentLineData[2], Themes.Animal, letters[0]);
-    console.log("Validation de la ligne :", isValid);
+    for (let i = 0; i < currentLineData.length; i++ ) {
+      if (getThemeByIndex(i) && currentLineData[i]) {
+        const themeByIndex = getThemeByIndex(i) as Themes;
+        const isValid = await verifyWord(currentLineData[i], themeByIndex, letters[letters.length - 1]);
+        console.log(isValid.data);
+      }
+    }
   };
 
   return (
