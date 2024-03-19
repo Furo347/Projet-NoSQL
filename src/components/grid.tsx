@@ -61,7 +61,7 @@ export default function BacGrid() {
   const handleValidateLine = async () => {
     // Récupère les données de la ligne actuelle
     const currentLineData = rowData[rowData.length - 1];
-    const isValid = await verifyWord(currentLineData[2], Themes.Vetement, letters[0]); // Par exemple, en supposant que le thème est Animal
+    const isValid = await verifyWord(currentLineData[2], Themes.Animal, letters[0]);
     console.log("Validation de la ligne :", isValid);
   };
 

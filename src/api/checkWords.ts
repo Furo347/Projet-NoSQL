@@ -2,10 +2,10 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 export enum Themes {
-    Vetement = 'clothes',
+    Vetement = 'clothes clothing',
     Metier = 'job',
-    Animal = 'species',
-    Nourriture = 'food'
+    Animal = 'species animal',
+    Nourriture = 'food',
 }
 function getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
@@ -52,7 +52,15 @@ export async function checkWord(word: string, desiredTheme: Themes, currentLette
         console.log(theme);
         if (Array.isArray(theme))
         {
-            check = theme.includes(desiredTheme);
+            const desiredWords = desiredTheme.split(' ');
+            for (const theme of Object.values(Themes)) {
+                const themeWords = theme.split(' ');
+                for (const desiredWord of desiredWords) {
+                    if (themeWords.includes(desiredWord)) {
+                        check=true;
+                    }
+                }
+            }
         }
     }
     return check
