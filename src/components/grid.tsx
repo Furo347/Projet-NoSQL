@@ -122,7 +122,7 @@ export default function BacGrid() {
               <Grid item style={{ flexBasis: '12%' }}>
                 <Paper className={classes.paper}>{letter}</Paper>
               </Grid>
-              {[...Array(4)].map((_, i) => (
+              {Array(4).map((_, i) => (
                 <Grid item key={i} className={classes.column} style={{ flexBasis: '22%' }}>
                 <TextField
                   className={`${classes.paper} ${classes.customTextField}`}
