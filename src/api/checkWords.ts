@@ -60,7 +60,6 @@ const checkWords = new Hono()
         const { word, desiredTheme, currentLetter } = ctx.req.valid('json');
         const result = await checkWord(word, desiredTheme as Themes, currentLetter);
         console.log(result);
-
         setResponseInRedis(result);
         return ctx.json(result);
     });

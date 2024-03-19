@@ -3,11 +3,29 @@ import {styles} from './Score.style';
 import Button from '@mui/material/Button';
 import { fetchScoreboardData } from './getScoreBoard';
 import { scoreboardData } from './getScoreBoard';
+import {useSearchParams} from "react-router-dom";
+import {useEffect, useState} from "react";
 
 const { title } = styles;
-const scores = await fetchScoreboardData();
+//const scores = await fetchScoreboardData(NAME);
 
 function ScoreboardPage() {
+    const [scores, setScores] = useState([])
+    const [searchParams] = useSearchParams();
+    const playerName = searchParams.get('PlayerName')
+
+    if (!playerName) {
+        window.location.href = '/'
+        return
+    }
+
+    useEffect(() => {
+        fetchScoreboardData(playerName).then((data) => {
+            if (data){
+                setScores(data)
+            }
+        })
+    }, [])
 
     const handleButtonClick = () => {
         window.location.href = '/game';

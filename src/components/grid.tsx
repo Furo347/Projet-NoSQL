@@ -6,6 +6,7 @@ import { Themes, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
+import { useSearchParams } from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,7 +50,18 @@ export default function BacGrid() {
   const classes = useStyles();
   const [letters, setLetters] = useState<string[]>([]);
   const [rowData, setRowData] = useState<string[][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
+  const [searchParams] = useSearchParams();
+  const playerName = searchParams.get('PlayerName')
 
+  if (!playerName) {
+    window.location.href = '/'
+    return
+  }
+  const handleButtonClick = () => {
+
+    window.location.href = `/scores?playerName=${playerName}`;
+    return
+  }
   const handleRandomLetter = () => {
     const newLetter = randomLetter();
     setLetters(prevLetters => [...prevLetters, newLetter]);
@@ -70,6 +82,7 @@ export default function BacGrid() {
       if (getThemeByIndex(i) && currentLineData[i]) {
         const themeByIndex = getThemeByIndex(i) as Themes;
         const isValid = await verifyWord(currentLineData[i], themeByIndex, letters[letters.length - 1]);
+        console.log(isValid.data);
       }
     }
   };
@@ -124,6 +137,7 @@ export default function BacGrid() {
           ))}
         </Grid>
       </div>
+      <Button variant="contained" onClick={handleButtonClick}>Voir Scores</Button>
     </>
   );
 }

@@ -6,22 +6,18 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
 import { useNavigate } from 'react-router-dom';
-
 export default function PlayerNameDialog() {
     const [open, setOpen] = useState(true);
     const [playerName, setPlayerName] = useState('');
     const navigate = useNavigate();
 
+    const handleSave = () => {
+        setOpen(false);
+        navigate(`/game?playerName=${playerName}`);
+    };
     const handleClose = () => {
         setOpen(false);
     };
-
-    const handleSave = () => {
-        console.log('Player Name:', playerName);
-        setOpen(false);
-        navigate("/game")
-    };
-
     const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
         setPlayerName(event.target.value);
     };
