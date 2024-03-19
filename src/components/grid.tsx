@@ -6,7 +6,7 @@ import { Themes, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
 import {useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
-import { useSearchParams } from 'react-router-dom'
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,15 +52,13 @@ export default function BacGrid() {
   const [rowData, setRowData] = useState<string[][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
   const [searchParams] = useSearchParams();
   const playerName = searchParams.get('playerName')
+  const nav = useNavigate()
 
   if (!playerName) {
-    window.location.href = '/'
-    return
+    return <Navigate to='/' />
   }
   const handleButtonClick = () => {
-
-    window.location.href = `/scores?playerName=${playerName}`;
-    return
+    nav(`/scores?playerName=${playerName}`)
   }
   const handleRandomLetter = () => {
     const newLetter = randomLetter();

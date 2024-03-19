@@ -3,7 +3,7 @@ import {styles} from './Score.style';
 import Button from '@mui/material/Button';
 import { fetchScoreboardData } from './getScoreBoard';
 import { scoreboardData } from './getScoreBoard';
-import {useSearchParams} from "react-router-dom";
+import {Navigate, useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 
 const { title } = styles;
@@ -12,10 +12,10 @@ function ScoreboardPage() {
     const [scores, setScores] = useState([])
     const [searchParams] = useSearchParams();
     const playerName = searchParams.get('playerName')
+    const nav = useNavigate()
 
     if (!playerName) {
-        window.location.href = '/'
-        return
+        return <Navigate to="/" />
     }
 
     useEffect(() => {
@@ -27,7 +27,7 @@ function ScoreboardPage() {
     }, [])
 
     const handleButtonClick = () => {
-        window.location.href = '/game';
+        nav(`/game?playerName=${playerName}`)
     }
 
     return (
