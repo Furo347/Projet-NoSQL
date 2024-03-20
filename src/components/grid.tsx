@@ -7,6 +7,7 @@ import TextField from '@mui/material/TextField';
 import {useCallback, useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
+import { apiClient } from '../client.tsx';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,10 +49,6 @@ export default function BacGrid() {
   const playerName = searchParams.get('playerName')
   const nav = useNavigate()
 
-  const handleButtonClick = useCallback(() => {
-    nav(`/scores?playerName=${playerName}`)
-  }, [playerName, nav])
-
   const handleRandomLetter = useCallback(() => {
     const newLetter = randomLetter();
     setRowData(prev => [...prev, [newLetter, ThemeList.map(() => '')]]);
@@ -61,6 +58,11 @@ export default function BacGrid() {
 
   if (!playerName) {
     return <Navigate to='/' />
+  }
+
+  const handleButtonClick = async () => {
+    await apiClient.setPoints[":name"].$post({param: {name: playerName}})
+    nav(`/scores?playerName=${playerName}`)
   }
 
   const handleTextFieldChange = (rowIndex: number, themeIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
