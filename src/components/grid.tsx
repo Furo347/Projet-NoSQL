@@ -13,13 +13,15 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       padding: theme.spacing(2),
       textAlign: 'center',
-      border: "1px solid",
+      border: "0.5px solid #1e90ff",
       borderRadius: 0,
     },
     title: {
       padding: theme.spacing(2),
       textAlign: 'center',
-      backgroundColor: "#1e90ff"
+      backgroundColor: "#1e90ff",
+      color: "white",
+      font: "bold"
     },
     divbutton: {
       padding: "1rem",
@@ -28,14 +30,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     button: {
       backgroundColor: "#1e90ff",
-      margin: "2px"
+      margin: "2px",
+      color: "white",
     },
     customTextField: {
       width: '100%',
     },
     column: {
-      border: "1px solid",
-      borderRadius: "0px"
+      border: "0.3px solid white",
+      borderRadius: 0
     }
   }),
 );
@@ -91,48 +94,54 @@ export default function BacGrid() {
   };
 
   return (
-    <>
-      <div className={classes.divbutton}>
-        <Button className={classes.button} onClick={handleValidateLine}>
-          VALIDER LA LIGNE
-        </Button>
-        <Button className={classes.button} onClick={handleRandomLetter}>
-          TIRER UNE LETTRE
-        </Button>
-      </div>
-      <div>
-        <Grid container alignItems="stretch">
-          <Grid item xs={12}>
-            <Paper className={classes.title}>Jeu du baccalauréat</Paper>
-          </Grid>
-            <Grid container alignItems="center">
-                {categories.map((category, index) => (
-                    <Grid item key={index} style={{ flexBasis: '20%'}}>
-                        <Paper className={classes.paper} style={{ backgroundColor: colorVerif }}>{category}</Paper>
-                    </Grid>
-                ))}
+      <>
+        <div className={classes.divbutton}>
+          <Button className={classes.button} onClick={handleValidateLine}>
+            VALIDER LA LIGNE
+          </Button>
+          <Button className={classes.button} onClick={handleRandomLetter}>
+            TIRER UNE LETTRE
+          </Button>
+        </div>
+        <div>
+          <Grid container alignItems="stretch">
+            <Grid item xs={12}>
+              <Paper className={classes.title}>Jeu du baccalauréat</Paper>
             </Grid>
-
-
-          {letters.map((letter, index) => (
-            <Grid container key={index}>
-              <Grid item style={{ flexBasis: '20%', backgroundColor: 'white' }}>
-                <Paper className={classes.paper}>{letter}</Paper>
-              </Grid>
-              {[...Array(4)].map((_, i) => (
-                <Grid item key={i} className={classes.column} style={{ flexBasis: '20%', backgroundColor: 'white' }}>
-                <TextField
-                  className={`${classes.paper} ${classes.customTextField}`}
-                  value={rowData[index] ? rowData[index][i] : ""}
-                  onChange={handleTextFieldChange(index, i)}
-                />
-              </Grid>
+            <Grid container alignItems="center">
+              {categories.map((category, index) => (
+                  <Grid item key={index} style={{flexBasis: '20%'}}>
+                    <Paper className={classes.paper} style={{backgroundColor: colorVerif}}>{category}</Paper>
+                  </Grid>
               ))}
             </Grid>
-          ))}
-        </Grid>
-      </div>
-      <Button variant="contained" onClick={handleButtonClick}>Voir Scores</Button>
-    </>
+
+
+            {letters.map((letter, index) => (
+                <Grid container key={index}>
+                  <Grid item style={{flexBasis: '20%', backgroundColor: 'white'}}>
+                    <Paper className={classes.paper}>{letter}</Paper>
+                  </Grid>
+                  {[...Array(4)].map((_, i) => (
+                      <Grid item key={i} className={classes.column}
+                            style={{flexBasis: '20%', backgroundColor: 'white'}}>
+                        <TextField
+                            className={`${classes.paper} ${classes.customTextField}`}
+                            value={rowData[index] ? rowData[index][i] : ""}
+                            onChange={handleTextFieldChange(index, i)}
+                        />
+                      </Grid>
+                  ))}
+                </Grid>
+            ))}
+          </Grid>
+        </div>
+        <div style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
+          <Button variant="contained" onClick={handleButtonClick}>
+            Voir Scores
+          </Button>
+        </div>
+
+      </>
   );
 }
