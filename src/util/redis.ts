@@ -10,8 +10,11 @@ async function connectToRedis() {
 
 connectToRedis();
 
-export async function setResponseInRedis(name: string, value: boolean) {
-    return client.append(`response_${name}`, value ? 'true' : 'false');
+export async function setResponseInRedis(name: string, value: boolean[]) {
+    const key = `response_${name}`
+    const ret = await client.setEx(key, 24*60*60, value.map((v) => v ? 'true' : 'false').join(''));
+
+    return ret
 }
 
 export async function getResponseFromRedis(name: string){

@@ -32,7 +32,7 @@ export async function insertInMongo(name: string, points: number) {
 // Retrieve function
 export async function getScoreBoard(): Promise<{ name: string, points: number }[]> {
     try {
-        const scores = await ScoreBoardModel.find({}, { _id: 0, __v: 0 }); // Exclude _id and __v fields
+        const scores = await ScoreBoardModel.find({}, { _id: 0, __v: 0 });
         return scores.map(score => ({ name: score.name, points: score.points }));
     } catch (error) {
         console.error('Error retrieving scores:', error);
