@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       border: "1px solid",
       borderRadius: 0,
-      backgroundColor: "#eeeeee"
     },
     title: {
       padding: theme.spacing(2),
@@ -49,9 +48,12 @@ function getThemeByIndex(index: number): Themes | undefined {
 export default function BacGrid() {
   const classes = useStyles();
   const [letters, setLetters] = useState<string[]>([]);
-  const [rowData, setRowData] = useState<string[][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
+  const [rowData, setRowData] = useState<string[][]>([]);
   const [searchParams] = useSearchParams();
   const playerName = searchParams.get('playerName')
+
+  const [colorVerif, setColorVerif] = useState<string>("white");
+  const categories = ["Lettre", "Vetement", "Metier", "Animal", "Nourriture"];
 
   if (!playerName) {
     window.location.href = '/'
@@ -65,7 +67,6 @@ export default function BacGrid() {
   const handleRandomLetter = () => {
     const newLetter = randomLetter();
     setLetters(prevLetters => [...prevLetters, newLetter]);
-    // Ajoute un nouvel élément vide à rowData pour la nouvelle ligne
     setRowData(prevRowData => [...prevRowData, Array.from({ length: 4 }, () => "")]);
   };
 
@@ -76,12 +77,14 @@ export default function BacGrid() {
   };
 
   const handleValidateLine = async () => {
-    // Récupère les données de la ligne actuelle
     const currentLineData = rowData[rowData.length - 1];
     for (let i = 0; i < currentLineData.length; i++ ) {
       if (getThemeByIndex(i) && currentLineData[i]) {
         const themeByIndex = getThemeByIndex(i) as Themes;
         const isValid = await verifyWord(currentLineData[i], themeByIndex, letters[letters.length - 1]);
+        if (isValid.data === "ok") {
+          setColorVerif("green");
+        }
         console.log(isValid.data);
       }
     }
@@ -102,30 +105,22 @@ export default function BacGrid() {
           <Grid item xs={12}>
             <Paper className={classes.title}>Jeu du baccalauréat</Paper>
           </Grid>
-          <Grid container>
-            <Grid item style={{ flexBasis: '12%' }}>
-              <Paper className={classes.paper}>Lettre</Paper>
+            <Grid container alignItems="center">
+                {categories.map((category, index) => (
+                    <Grid item key={index} style={{ flexBasis: '20%'}}>
+                        <Paper className={classes.paper} style={{ backgroundColor: colorVerif }}>{category}</Paper>
+                    </Grid>
+                ))}
             </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Vetement</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Metier</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Animal</Paper>
-            </Grid>
-            <Grid item style={{ flexBasis: '22%' }}>
-              <Paper className={classes.paper}>Nourriture</Paper>
-            </Grid>
-          </Grid>
+
+
           {letters.map((letter, index) => (
             <Grid container key={index}>
-              <Grid item style={{ flexBasis: '12%' }}>
+              <Grid item style={{ flexBasis: '20%', backgroundColor: 'white' }}>
                 <Paper className={classes.paper}>{letter}</Paper>
               </Grid>
               {[...Array(4)].map((_, i) => (
-                <Grid item key={i} className={classes.column} style={{ flexBasis: '22%' }}>
+                <Grid item key={i} className={classes.column} style={{ flexBasis: '20%', backgroundColor: 'white' }}>
                 <TextField
                   className={`${classes.paper} ${classes.customTextField}`}
                   value={rowData[index] ? rowData[index][i] : ""}
