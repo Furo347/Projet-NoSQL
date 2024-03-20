@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { ScoreBoardModel } from '../models/Scoreboard';
 
 // Define the MongoDB URI
-const MONGODB_URI = 'mongodb://localhost:27017';
+const MONGODB_URI = `mongodb://${process.env.MONGO_PORT}:${process.env.MONGO_PORT}`;
 
 // Connect to MongoDB
 async function connectToMongo() {
