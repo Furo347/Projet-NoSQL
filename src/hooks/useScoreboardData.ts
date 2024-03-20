@@ -1,30 +1,21 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { apiClient } from "../client";
 
-export type scoreboardData = { name: string; points: number; };
+export type Scores = Parameters<typeof apiClient.points.$post>[0]['json'];
 
 async function getScoreFromRegis() {
-    try {
-        const response = await axios.get('/api/count');
-        return response;
-    } catch (error) {
-        console.error('Error Checking word:', error);
-        return null;
-    }
+  const res = await apiClient.count.$get()
+
+  return res.json()
 }
-async function postScores(scores: scoreboardData) {
-    try {
-        console.log(scores)
-        const response = await axios.post('/api/points', scores);
-        return response.data;
-    } catch (error) {
-        console.error('Error posting scores:', error);
-        return null;
-    }
+async function postScores(scores: Scores) {
+  const res = await apiClient.points.$post({json: scores})
+
+  return res.json()
 }
 
 export function useScoreboardData(name: string | null) {
-  const [scores, setScores] = useState([])
+  const [scores, setScores] = useState<Scores[]>([])
 
   useEffect(() => {
     if (!name) {
@@ -36,21 +27,23 @@ export function useScoreboardData(name: string | null) {
         return;
       }
 
-      const points = response.data.count as number
+      const points = response.count
 
       postScores({name: name, points: points}).then((postResponse) => {
         if (!postResponse) {
           return;
         }
 
-        axios.get('/api/scoreboard').then((response) => {
-          const sortedData = response.data.sort((a: scoreboardData, b: scoreboardData) => b.points - a.points);
-          const top10 = sortedData.slice(0, 10);
-          setScores(top10);
-        }).catch((error) => {
-          console.error('Error fetching scoreboard data:', error);
-          return;
-        })
+        apiClient.scoreboard.$get()
+          .then((res) => res.json())
+          .then((res) => {
+            const sortedData = res.sort((a, b) => b.points - a.points);
+            const top10 = sortedData.slice(0, 10);
+            setScores(top10);
+          }).catch((error) => {
+            console.error('Error fetching scoreboard data:', error);
+            return;
+          })
       })
     })
   }, [name])

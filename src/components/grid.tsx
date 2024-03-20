@@ -2,7 +2,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
-import { ThemeList, randomLetter } from '../util/rapidapi.ts';
+import { ThemeList, Themes, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
 import {useCallback, useState} from "react";
 import {verifyWord} from "./verifyWord.ts";
@@ -73,7 +73,7 @@ export default function BacGrid() {
       }
 
       const theme = ThemeList[i]
-      await verifyWord(data, theme, currentLineData[0]);
+      await verifyWord(data, Themes[theme], currentLineData[0]);
     }
   }, [rowData]);
 

@@ -1,15 +1,9 @@
-import axios from 'axios';
-import {ThemesKey} from "../util/rapidapi.ts";
+import { apiClient } from "../client.tsx";
+import {ThemesValue} from "../util/rapidapi.ts";
 
-export type checkWordData = {word: string, desiredTheme: ThemesKey, currentLetter: string; };
-export async function verifyWord(word: string, desiredTheme: ThemesKey, currentLetter: string) {
-    try {
-        console.log(currentLetter)
-        const checkWordData = {word: word, desiredTheme: desiredTheme, currentLetter: currentLetter}
-        const response = await axios.post('/api/checkWord', checkWordData);
-        return response;
-    } catch (error) {
-        console.error('Error Checking word:', error);
-        return null;
-    }
+export async function verifyWord(word: string, desiredTheme: ThemesValue, currentLetter: string) {
+    const checkWordData = {word, desiredTheme, currentLetter}
+    const response = await apiClient.checkWord.$post({json: checkWordData})
+
+    return response.json()
 }

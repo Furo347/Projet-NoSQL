@@ -8,6 +8,7 @@ export const Themes = {
 export const ThemeList = Object.keys(Themes) as Array<keyof typeof Themes>;
 
 export type ThemesKey = keyof typeof Themes;
+export type ThemesValue = typeof Themes[ThemesKey];
 
 function getRandomInt(max: number) {
   return Math.floor(Math.random() * max);

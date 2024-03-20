@@ -2,7 +2,7 @@ import { Box } from '@material-ui/core';
 import {styles} from './Score.style';
 import Button from '@mui/material/Button';
 import {Navigate, useNavigate, useSearchParams} from "react-router-dom";
-import { scoreboardData, useScoreboardData } from '../../hooks/useScoreboardData';
+import { useScoreboardData } from '../../hooks/useScoreboardData';
 
 const { title } = styles;
 
@@ -32,7 +32,7 @@ function ScoreboardPage() {
                     </tr>
                 </thead>
                 <tbody>
-                    {scores.map((score: scoreboardData, index: number) => (
+                    {scores.map((score, index) => (
                         <tr key={index}>
                             <td>{score.name}</td>
                             <td>{score.points}</td>
