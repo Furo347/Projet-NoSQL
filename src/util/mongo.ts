@@ -1,21 +1,8 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose from 'mongoose';
+import { ScoreBoardModel } from '../models/Scoreboard';
 
 // Define the MongoDB URI
 const MONGODB_URI = 'mongodb://localhost:27017';
-
-// Define the schema
-interface ScoreBoard extends Document {
-    name: string;
-    points: number;
-}
-
-const schema: Schema<ScoreBoard> = new Schema({
-    name: String,
-    points: Number,
-});
-
-// Define the model
-const ScoreBoardModel: Model<ScoreBoard> = mongoose.model<ScoreBoard>('ScoreBoard', schema);
 
 // Connect to MongoDB
 async function connectToMongo() {

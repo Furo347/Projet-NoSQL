@@ -1,7 +1,7 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
-import {setResponseInRedis} from "../Redis/clientManager.ts";
+import {setResponseInRedis} from "../util/redis.ts";
 import {Themes, ThemesKey} from "../util/rapidapi.ts";
 
 async function getTheme(word: string) {

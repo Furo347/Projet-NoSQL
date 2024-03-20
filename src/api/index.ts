@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import {zValidator} from "@hono/zod-validator";
 import {z} from "zod";
-import {setResponseInRedis} from "../Redis/clientManager.ts";
+import {setResponseInRedis} from "../util/redis.ts";
 import points from "./points.ts";
 import checkWords from "./checkWords.ts";
 

@@ -1,8 +1,8 @@
 import { Hono } from 'hono';
-import { getResponseFromRedis } from '../Redis/clientManager.ts';
+import { getResponseFromRedis } from '../util/redis.ts';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
-import { getScoreBoard, insertInMongo } from '../Mongodb/schema.ts';
+import { getScoreBoard, insertInMongo } from '../util/mongo.ts';
 
 async function countPoints() {
     let points = 0;
