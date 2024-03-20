@@ -74,9 +74,6 @@ export default function BacGrid() {
 
     for (let i = 0; i < currentLineData[1].length; i++ ) {
       const data = currentLineData[1][i]
-      if (!data) {
-        return
-      }
 
       const theme = ThemeList[i]
       await verifyWord(playerName, data, Themes[theme], currentLineData[0]);
