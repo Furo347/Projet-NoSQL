@@ -10,12 +10,12 @@ async function connectToRedis() {
 
 connectToRedis();
 
-export async function setResponseInRedis(value: boolean) {
-    return await client.append('response', value ? 'true' : 'false');
+export async function setResponseInRedis(name: string, value: boolean) {
+    return client.append(`response_${name}`, value ? 'true' : 'false');
 }
 
-export async function getResponseFromRedis(){
-    const r = await  client.get('response');
-    await client.del('response');
+export async function getResponseFromRedis(name: string){
+    const r = await client.get(`response_${name}`);
+    await client.del(`response_${name}`);
     return r;
 }
