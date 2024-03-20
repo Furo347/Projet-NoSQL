@@ -57,13 +57,19 @@ export default function BacGrid() {
     setRowData(prev => [...prev, [newLetter, ThemeList.map(() => '')]]);
   }, []);
 
-  const handleTextFieldChange = useCallback((rowIndex: number, themeIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  console.log(rowData)
+
+  if (!playerName) {
+    return <Navigate to='/' />
+  }
+
+  const handleTextFieldChange = (rowIndex: number, themeIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const newData = [...rowData];
     newData[rowIndex][1][themeIndex] = event.target.value;
     setRowData(newData);
-  }, [rowData]);
+  };
 
-  const handleValidateLine = useCallback(async () => {
+  const handleValidateLine = async () => {
     const currentLineData = rowData[rowData.length - 1];
 
     for (let i = 0; i < currentLineData[1].length; i++ ) {
@@ -73,15 +79,9 @@ export default function BacGrid() {
       }
 
       const theme = ThemeList[i]
-      await verifyWord(data, Themes[theme], currentLineData[0]);
+      await verifyWord(playerName, data, Themes[theme], currentLineData[0]);
     }
-  }, [rowData]);
-
-  console.log(rowData)
-
-  if (!playerName) {
-    return <Navigate to='/' />
-  }
+  };
 
   return (
     <>

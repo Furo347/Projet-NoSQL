@@ -1,39 +1,25 @@
 import { useEffect, useState } from "react";
 import { apiClient } from "../client";
 
-export type Scores = Parameters<typeof apiClient.points.$post>[0]['json'];
+export type ScoresDto = Parameters<typeof apiClient.setPoints[":name"]["$post"]>[0]["param"];
+export type ScoresReturn = Awaited<ReturnType<Awaited<ReturnType<typeof apiClient.setPoints[":name"]["$post"]>>['json']>>;
 
-async function getScoreFromRegis() {
-  const res = await apiClient.count.$get()
-
-  return res.json()
-}
-async function postScores(scores: Scores) {
-  const res = await apiClient.points.$post({json: scores})
+async function postScores({name}: ScoresDto) {
+  const res = await apiClient.setPoints[":name"].$post({param: {name}})
 
   return res.json()
 }
 
 export function useScoreboardData(name: string | null) {
-  const [scores, setScores] = useState<Scores[]>([])
+  const [scores, setScores] = useState<ScoresReturn[]>([])
 
   useEffect(() => {
     if (!name) {
       return
     }
 
-    getScoreFromRegis().then((response) => {
-      if (!response) {
-        return;
-      }
-
-      const points = response.count
-
-      postScores({name: name, points: points}).then((postResponse) => {
-        if (!postResponse) {
-          return;
-        }
-
+    postScores({name})
+      .then(() => {
         apiClient.scoreboard.$get()
           .then((res) => res.json())
           .then((res) => {
@@ -45,7 +31,10 @@ export function useScoreboardData(name: string | null) {
             return;
           })
       })
-    })
+      .catch((error) => {
+        console.error('Error updating scores:', error);
+        return;
+      })
   }, [name])
 
   return scores
