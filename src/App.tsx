@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import BacGrid from './components/grid'
-import PlayerNameDialog from './components/identification'
-import ScoreboardPage from './components/Score/Score';
+import Game from './components/Game'
+import Login from './components/Login/Login'
+import Scoreboard from './components/Scoreboard/Scoreboard';
 
 function App() {
   return (
       <Router>
           <Routes>
-              <Route path="/game" element={<BacGrid />} />
-              <Route path="/" element={<PlayerNameDialog />} />
-              <Route path="/scores" element={<ScoreboardPage />} />
+              <Route path="/" element={<Login />} />
+              <Route path="/game" element={<Game />} />
+              <Route path="/scores" element={<Scoreboard />} />
           </Routes>
       </Router>
   )

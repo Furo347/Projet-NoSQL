@@ -2,8 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { z } from "zod";
 import {setResponseInRedis} from "../util/redis.ts";
-import {Themes, ThemesValue} from "../util/rapidapi.ts";
-import { zodEnumFromObjValues } from "../util/zod.ts";
+import {ThemeValueList} from "../util/rapidapi.ts";
 
 async function getTheme(word: string) {
     const verifiedWord = encodeURIComponent(word.toLowerCase());
@@ -31,36 +30,45 @@ async function getTheme(word: string) {
 }
 
 
-async function checkWord(word: string, desiredTheme: ThemesValue, currentLetter: string) {
-    let check = false;
-    if (word[0].toUpperCase() === currentLetter) {
-        const theme = await getTheme(word)
-        console.log(theme);
-        if (Array.isArray(theme))
-        {
-            const desiredWords = desiredTheme.split(' ');
-            for (const desiredWord of desiredWords) {
-                if (theme.includes(desiredWord)) {
-                    check=true;
-                }
+async function checkLine(words: string[], currentLetter: string) {
+    const ret: boolean[] = []
+    for (const [i, theme] of ThemeValueList.entries()) {
+        const word = words[i]
+
+        if (!word || word[0].toUpperCase() !== currentLetter) {
+            ret.push(false)
+            continue
+        }
+
+        const wordTheme = await getTheme(word)
+
+        if (Array.isArray(wordTheme)) {
+            const possibleThemes = theme.split(' ')
+
+            for (const f of possibleThemes) {
+                ret.push(wordTheme.includes(f))
             }
+        } else {
+            ret.push(false)
         }
     }
-    return check
+
+    return ret
 }
 
-const checkWords = new Hono()
-    .post('/checkWord', zValidator('json', z.object({
+const check = new Hono()
+    .post('/checkGame', zValidator('json', z.object({
+        game: z.object({
+            letter: z.string(),
+            wordList: z.string().array()
+        }).array(),
         name: z.string(),
-        word: z.string(),
-        desiredTheme: zodEnumFromObjValues(Themes),
-        currentLetter: z.string()
     })), async (ctx) => {
-        const { name, word, desiredTheme, currentLetter } = ctx.req.valid('json');
-        const result = await checkWord(word, desiredTheme, currentLetter);
-        console.log(result);
-        setResponseInRedis(name, result);
-        return ctx.json(result);
+        const { game, name } = ctx.req.valid('json');
+        const results = await Promise.all(game.map(({letter, wordList}) => checkLine(wordList, letter)))
+        
+        setResponseInRedis(name, results.flat());
+        return ctx.json(game.map((v, i) => ({...v, check: results[i]})));
     });
 
-export default checkWords;
+export default check;

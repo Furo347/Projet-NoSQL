@@ -1,24 +1,20 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useCallback, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import TextField from '@material-ui/core/TextField';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-export default function PlayerNameDialog() {
+import {style} from './Login.style'
+
+export default function Login() {
     const [playerName, setPlayerName] = useState('');
-    const navigate = useNavigate();
 
-    const handleSave = () => {
-        navigate(`/game?playerName=${playerName}`);
-    };
-    const handleClose = () => {
-    };
-    const handleInputChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    const handleInputChange = useCallback((event: { target: { value: SetStateAction<string>; }; }) => {
         setPlayerName(event.target.value);
-    };
+    }, []);
 
     return (
         <div>
@@ -36,12 +32,11 @@ export default function PlayerNameDialog() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSave} color="primary">
-                        Save
-                    </Button>
+                    <Link to={`/game?playerName=${playerName}`} aria-disabled={playerName.length === 0} style={playerName.length === 0 ? style.linkDisabled : undefined}>
+                        <Button color="primary" disabled={playerName.length === 0}>
+                            Save
+                        </Button>
+                    </Link>
                 </DialogActions>
             </Dialog>
         </div>

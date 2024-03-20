@@ -1,23 +1,19 @@
 import { Box } from '@material-ui/core';
-import {styles} from './Score.style';
+import {styles} from './Scoreboard.style';
 import Button from '@mui/material/Button';
-import {Navigate, useNavigate, useSearchParams} from "react-router-dom";
+import {Navigate, useSearchParams} from "react-router-dom";
 import { useScoreboardData } from '../../hooks/useScoreboardData';
+import { Link } from 'react-router-dom';
 
 const { title } = styles;
 
-function ScoreboardPage() {
+export default function Scoreboard() {
     const [searchParams] = useSearchParams();
     const playerName = searchParams.get('playerName')
-    const nav = useNavigate()
-    const scores = useScoreboardData(playerName);
+    const scores = useScoreboardData();
 
     if (!playerName) {
         return <Navigate to="/" />
-    }
-
-    const handleButtonClick = () => {
-        nav(`/game?playerName=${playerName}`)
     }
 
     return (
@@ -33,7 +29,10 @@ function ScoreboardPage() {
                 </thead>
                 <tbody>
                     {scores.map((score, index) => (
-                        <tr key={index}>
+                        <tr key={index} style={{
+                            backgroundColor: playerName === score.name ? '#e9c46a' : '',
+                            color: playerName === score.name ? 'black' : ''
+                        }}>
                             <td>{score.name}</td>
                             <td>{score.points}</td>
                         </tr>
@@ -41,9 +40,9 @@ function ScoreboardPage() {
                 </tbody>
             </table>
         </Box>
-        <Button variant="contained" onClick={handleButtonClick}>Retour</Button>
+        <Link to={`/game?playerName=${playerName}`}>
+            <Button variant="contained">Retour</Button>
+        </Link>
     </>
     );
 }
-
-export default ScoreboardPage;

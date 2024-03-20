@@ -2,10 +2,9 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
-import { ThemeList, Themes, randomLetter } from '../util/rapidapi.ts';
+import { ThemeKeyList, randomLetter } from '../util/rapidapi.ts';
 import TextField from '@mui/material/TextField';
 import {useCallback, useState} from "react";
-import {verifyWord} from "./verifyWord.ts";
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { apiClient } from '../client.tsx';
 
@@ -38,23 +37,35 @@ const useStyles = makeStyles((theme: Theme) =>
     column: {
       border: "1px solid",
       borderRadius: "0px"
-    }
+    },
+    validColumn: {
+      borderWidth: '1px',
+      borderColor: 'green'
+    },
   }),
 );
 
-export default function BacGrid() {
+export default function Game() {
   const classes = useStyles();
-  const [rowData, setRowData] = useState<[string, string[]][]>([]); // Utilisez un tableau bidimensionnel pour stocker les données de chaque ligne
+  const [letters, setLetters] = useState<string[]>([])
+  const [lines, setLines] = useState<string[][]>([]);
+  const [checkLines, setCheckLines] = useState<boolean[][] | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const playerName = searchParams.get('playerName')
   const nav = useNavigate()
 
   const handleRandomLetter = useCallback(() => {
-    const newLetter = randomLetter();
-    setRowData(prev => [...prev, [newLetter, ThemeList.map(() => '')]]);
-  }, []);
+    if (letters.length > 15) {
+      return
+    }
 
-  console.log(rowData)
+    const newLetter = randomLetter(letters);
+    setLetters((prev) => [...prev, newLetter]);
+    setLines((prev) => [...prev, ThemeKeyList.map(() => '')]);
+  }, [letters]);
+
+  console.log(lines)
 
   if (!playerName) {
     return <Navigate to='/' />
@@ -66,29 +77,30 @@ export default function BacGrid() {
   }
 
   const handleTextFieldChange = (rowIndex: number, themeIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newData = [...rowData];
-    newData[rowIndex][1][themeIndex] = event.target.value;
-    setRowData(newData);
+    const newData = [...lines];
+    newData[rowIndex][themeIndex] = event.target.value;
+    setLines(newData);
   };
 
   const handleValidateLine = async () => {
-    const currentLineData = rowData[rowData.length - 1];
+    setIsLoading(true);
 
-    for (let i = 0; i < currentLineData[1].length; i++ ) {
-      const data = currentLineData[1][i]
+    const resultJson = await apiClient.checkGame.$post({json: {game: letters.map((v, i) => ({letter: v, wordList: lines[i]})), name: playerName}})
+    const results = await resultJson.json()
 
-      const theme = ThemeList[i]
-      await verifyWord(playerName, data, Themes[theme], currentLineData[0]);
-    }
+    setCheckLines(results.map((v) => v.check))
+
+    setIsLoading(false);
   };
 
   return (
     <>
       <div className={classes.divbutton}>
-        <Button className={classes.button} onClick={handleValidateLine}>
-          VALIDER LA LIGNE
+        {checkLines && <Button variant="contained" onClick={handleButtonClick}>Voir Scores</Button>}
+        <Button className={classes.button} onClick={handleValidateLine} disabled={isLoading || checkLines !== null}>
+          {isLoading ? 'Loading...' : 'VALIDER'}
         </Button>
-        <Button className={classes.button} onClick={handleRandomLetter}>
+        <Button className={classes.button} onClick={handleRandomLetter} disabled={isLoading || checkLines !== null}>
           TIRER UNE LETTRE
         </Button>
       </div>
@@ -101,29 +113,30 @@ export default function BacGrid() {
               <Grid item style={{ flexBasis: '12%' }}>
                 <Paper className={classes.paper}>Lettre</Paper>
               </Grid>
-            {ThemeList.map((theme) => 
-              <Grid item style={{ flexBasis: '22%' }}>
+            {ThemeKeyList.map((theme) => 
+              <Grid item style={{ flexBasis: '22%' }} key={theme}>
                 <Paper className={classes.paper}>{theme}</Paper>
-              </Grid>)}
+              </Grid>
+            )}
           </Grid>
-          {rowData.map((data, index) => (
+          {letters.map((letter, index) => (
             <Grid container key={index}>
               <Grid item style={{ flexBasis: '12%' }}>
-                <Paper className={classes.paper}>{data[0]}</Paper>
+                <Paper className={classes.paper}>{letter}</Paper>
               </Grid>
-              {ThemeList.map((_, i) => (
-                <Grid item key={i} className={classes.column} style={{ flexBasis: '22%' }}>
-                <TextField
-                  className={`${classes.paper} ${classes.customTextField}`}
-                  onChange={handleTextFieldChange(index, i)}
-                />
-              </Grid>
+              {ThemeKeyList.map((_, i) => (
+                <Grid item key={i} className={`${classes.column} ${checkLines && checkLines[index][i] && classes.validColumn}`} style={{ flexBasis: '22%' }}>
+                  <TextField
+                    className={`${classes.paper} ${classes.customTextField}`}
+                    onChange={handleTextFieldChange(index, i)}
+                    disabled={checkLines !== null || isLoading}
+                  />
+                </Grid>
               ))}
             </Grid>
           ))}
         </Grid>
       </div>
-      <Button variant="contained" onClick={handleButtonClick}>Voir Scores</Button>
     </>
   );
 }
