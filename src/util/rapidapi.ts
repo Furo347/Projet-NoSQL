@@ -16,10 +16,12 @@ function getRandomInt(max: number) {
 }
 
 export function randomLetter(exclude: string[]) {
-  const ranNumber = getRandomInt(25);
-  const letter = [
-    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].filter((v) => !exclude.includes(v));
-  const randomLowerCaseLetter = letter[ranNumber];
+  const letters = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'].filter((v) => !exclude.includes(v));
+
+  const ranNumber = getRandomInt(letters.length - 1);
+  
+  const randomLowerCaseLetter = letters[ranNumber];
   return randomLowerCaseLetter.toUpperCase();
 }
