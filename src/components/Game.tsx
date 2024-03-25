@@ -65,8 +65,6 @@ export default function Game() {
     setLines((prev) => [...prev, ThemeKeyList.map(() => '')]);
   }, [letters]);
 
-  console.log(lines)
-
   if (!playerName) {
     return <Navigate to='/' />
   }
