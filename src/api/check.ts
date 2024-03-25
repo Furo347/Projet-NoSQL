@@ -45,9 +45,9 @@ async function checkLine(words: string[], currentLetter: string) {
         if (Array.isArray(wordTheme)) {
             const possibleThemes = theme.split(' ')
 
-            for (const f of possibleThemes) {
-                ret.push(wordTheme.includes(f))
-            }
+            const isValid = possibleThemes.map((v) => wordTheme.includes(v)).includes(true)
+
+            ret.push(isValid)
         } else {
             ret.push(false)
         }
