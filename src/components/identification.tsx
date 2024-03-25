@@ -17,7 +17,6 @@ export default function PlayerNameDialog() {
   };
 
   const handleSave = () => {
-    console.log('Player Name:', playerName);
     setOpen(false);
     navigate("/game")
   };

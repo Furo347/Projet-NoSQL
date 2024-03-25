@@ -8,7 +8,6 @@ const MONGODB_URI = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_POR
 async function connectToMongo() {
     try {
         await mongoose.connect(MONGODB_URI);
-        
 
         console.log('Connected to MongoDB');
     } catch (error) {
@@ -21,7 +20,6 @@ connectToMongo();
 // Insert function
 export async function insertInMongo(name: string, points: number) {
     try {
-        console.log('Data inserted successfully');
         return await ScoreBoardModel.create({ name, points });
     } catch (error) {
         console.error('Error inserting data:', error);
@@ -43,8 +41,7 @@ export async function getScoreBoard(): Promise<{ name: string, points: number }[
 // Function to delete all data from the ScoreBoard collection
 export async function deleteAllData() {
     try {
-        const result = await ScoreBoardModel.deleteMany({});
-        console.log(`${result.deletedCount} documents deleted from the ScoreBoard collection.`);
+        await ScoreBoardModel.deleteMany({});
     } catch (error) {
         console.error('Error deleting data:', error);
         throw error;
